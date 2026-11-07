@@ -529,31 +529,8 @@
         <script>setTimeout(() => { const el = document.getElementById('flashBanner'); if (el) el.remove(); }, 4000);</script>
     @endif
 
-    <!-- Header -->
-    <header class="top-header">
-        <a href="/admin" class="brand-box">
-            <img src="/images/logo.png" alt="Logo Koperasi" onerror="this.style.display='none'">
-            <span class="brand-title">Koperasi Peduli Buruh Migran Indramayu</span>
-        </a>
-
-        <nav class="pill-nav" aria-label="Menu Utama">
-            <a href="/admin" class="pill-tab">Dashboard</a>
-            <a href="/admin/members" class="pill-tab">Manajemen Anggota</a>
-            <a href="/admin/branches" class="pill-tab">Data Kantor & Posko</a>
-            <a href="/peta" class="pill-tab active">Peta GIS</a>
-        </nav>
-
-        <div class="header-actions">
-            <button type="button" class="btn-action" id="btn-near">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-                <span id="near-btn-text">Lokasi Terdekat</span>
-            </button>
-            <button type="button" class="btn-action primary" id="btn-toggle-pinpoint" onclick="togglePinpointMode()">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                <span id="pinpoint-btn-text">Tambah Titik Lokasi</span>
-            </button>
-        </div>
-    </header>
+    <!-- Shared Consistent Header Navbar -->
+    @include('components.shared-navbar')
 
     <!-- Workspace -->
     <div class="workspace">

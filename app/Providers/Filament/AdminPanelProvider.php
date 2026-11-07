@@ -39,8 +39,8 @@ class AdminPanelProvider extends PanelProvider
                 fn () => view('filament.custom-theme'),
             )
             ->renderHook(
-                'panels::user-menu.before',
-                fn () => view('filament.topbar-actions'),
+                'panels::body.start',
+                fn () => view('components.shared-navbar'),
             )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
