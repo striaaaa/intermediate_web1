@@ -23,23 +23,13 @@ class BranchResource extends Resource
 
     protected static UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Kantor & Posko GIS';
+    protected static ?string $navigationLabel = 'Kantor & Posko';
 
     protected static ?string $modelLabel = 'Kantor / Posko';
 
-    protected static ?string $pluralModelLabel = 'Kantor & Posko Layanan Migrant CARE';
+    protected static ?string $pluralModelLabel = 'Kantor & Posko Layanan';
 
     protected static ?int $navigationSort = 2;
-
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) static::getModel()::count();
-    }
-
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
-    }
 
     public static function form(Schema $schema): Schema
     {

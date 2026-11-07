@@ -15,13 +15,13 @@ class ListBranches extends ListRecords
     {
         return [
             Action::make('buka_peta_gis')
-                ->label('Buka Peta GIS Interaktif')
+                ->label('Buka Peta GIS')
                 ->icon('heroicon-o-map')
                 ->color('gray')
                 ->url(url('/peta')),
             CreateAction::make()
-                ->label('+ Pin-Point Kantor / Posko Baru')
-                ->icon('heroicon-o-map-pin'),
+                ->label('Tambah Lokasi')
+                ->icon('heroicon-o-plus'),
         ];
     }
 }

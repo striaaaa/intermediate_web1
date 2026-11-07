@@ -4,29 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>GIS Jaringan Layanan & Posko — Koperasi Peduli Buruh Migran Indramayu</title>
+    <title>Peta Lokasi Kantor & Posko — Koperasi Peduli Buruh Migran Indramayu</title>
 
-    <!-- Google Font: Plus Jakarta Sans (Sesuai Design.md OpsiProyek1) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-
-    <!-- Leaflet CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
         :root {
             --k-primary: #09A46E;
-            --k-primary-dark: #0B6B4F;
             --k-primary-hover: #064E3B;
-            --k-surface-soft: #E8F7F1;
             --k-bg: #F7F8F5;
-            --k-card: #FFFFFF;
             --k-border: #DCE3DE;
             --k-border-soft: #E4EDE8;
             --k-text: #17211C;
             --k-text-secondary: #526158;
-            --k-text-muted: #7A857F;
         }
 
         * { box-sizing: border-box; }
@@ -42,10 +35,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ─── TOP HEADER BAR (Persis Gaya AdminLayout.tsx OpsiProyek1) ─── */
+        /* Top Header */
         .top-header {
-            height: 70px;
-            background: rgba(247, 248, 245, 0.92);
+            height: 68px;
+            background: rgba(247, 248, 245, 0.94);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--k-border-soft);
             padding: 0 24px;
@@ -64,40 +57,18 @@
             color: inherit;
         }
         .brand-box img {
-            height: 40px;
+            height: 38px;
             width: auto;
             object-fit: contain;
         }
-        .brand-text-wrap {
-            display: flex;
-            flex-direction: column;
-        }
-        .brand-pill {
-            font-size: 9px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--k-primary);
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .brand-pill::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--k-primary);
-            display: inline-block;
-        }
         .brand-title {
             font-size: 14px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--k-text);
             letter-spacing: -0.01em;
         }
 
-        /* Floating White Pill Navigation Tabs */
+        /* Center Navigation Tabs */
         .pill-nav {
             display: flex;
             align-items: center;
@@ -106,7 +77,7 @@
             padding: 5px;
             border-radius: 9999px;
             border: 1px solid var(--k-border-soft);
-            box-shadow: 0 2px 16px rgba(9, 164, 110, 0.05);
+            box-shadow: 0 2px 14px rgba(9, 164, 110, 0.04);
         }
         .pill-tab {
             padding: 7px 14px;
@@ -118,10 +89,7 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            transition: all 0.2s ease;
-            border: none;
-            background: transparent;
-            cursor: pointer;
+            transition: all 0.15s ease;
             white-space: nowrap;
         }
         .pill-tab:hover {
@@ -132,37 +100,24 @@
             background: var(--k-primary);
             color: #FFFFFF;
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(9, 164, 110, 0.25);
-        }
-        .pill-badge {
-            background: var(--k-primary);
-            color: #FFFFFF;
-            font-size: 10px;
-            font-weight: 800;
-            padding: 1px 6px;
-            border-radius: 9999px;
-        }
-        .pill-tab.active .pill-badge {
-            background: #FFFFFF;
-            color: var(--k-primary);
         }
 
-        /* Header Right Actions */
+        /* Header Actions */
         .header-actions {
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .btn-action {
-            padding: 8px 15px;
-            border-radius: 9999px;
+            padding: 8px 14px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 700;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 7px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             border: 1px solid var(--k-border);
             background: #FFFFFF;
             color: var(--k-text);
@@ -171,31 +126,23 @@
         .btn-action:hover {
             border-color: var(--k-primary);
             color: var(--k-primary);
-            background: #FAFDFB;
         }
         .btn-action.primary {
             background: var(--k-primary);
             color: #FFFFFF;
             border-color: var(--k-primary);
-            box-shadow: 0 4px 12px rgba(9, 164, 110, 0.25);
         }
         .btn-action.primary:hover {
             background: var(--k-primary-hover);
             border-color: var(--k-primary-hover);
         }
         .btn-action.pin-active {
-            background: #FEF3C7;
-            color: #92400E;
-            border-color: #F59E0B;
-            animation: pulseBorder 1.8s infinite;
+            background: #111827;
+            color: #FFFFFF;
+            border-color: #111827;
         }
 
-        @keyframes pulseBorder {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.35); }
-            50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0); }
-        }
-
-        /* ─── MAIN WORKSPACE ─── */
+        /* Workspace */
         .workspace {
             flex: 1;
             display: flex;
@@ -207,69 +154,34 @@
             margin: 0 auto;
         }
 
-        /* ─── LEFT BENTO PANEL (DAFTAR & FORM PIN-POINT) ─── */
+        /* Left Panel */
         .left-panel {
-            width: 410px;
+            width: 390px;
             background: #FFFFFF;
             border: 1px solid var(--k-border);
-            border-radius: 20px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 2px 14px rgba(9, 164, 110, 0.04);
             flex-shrink: 0;
         }
-
         .panel-header {
             padding: 18px 20px 14px 20px;
             border-bottom: 1px solid #F0F3EF;
         }
-        .panel-eyebrow {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 4px;
-        }
-        .eyebrow-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 10px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: var(--k-primary);
-        }
-        .eyebrow-tag span {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--k-primary);
-        }
-        .count-pill {
-            font-size: 11px;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 9999px;
-            background: var(--k-surface-soft);
-            color: var(--k-primary);
-            border: 1px solid rgba(9, 164, 110, 0.25);
-        }
         .panel-header h2 {
             margin: 0;
-            font-size: 17px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--k-text);
-            letter-spacing: -0.01em;
         }
         .panel-header p {
-            margin: 3px 0 0 0;
+            margin: 4px 0 0 0;
             font-size: 12px;
             color: var(--k-text-secondary);
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
-        /* Search & Region Filter inside Left Panel */
         .panel-controls {
             padding: 12px 16px;
             background: #FAFDFB;
@@ -284,8 +196,9 @@
             gap: 8px;
             background: #FFFFFF;
             border: 1px solid var(--k-border);
-            border-radius: 12px;
-            padding: 7px 12px;
+            border-radius: 10px;
+            padding: 7px 11px;
+            color: #6B7280;
         }
         .search-box input {
             border: none;
@@ -303,9 +216,9 @@
         .region-btn {
             flex: 1;
             padding: 6px 8px;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 11.5px;
-            font-weight: 700;
+            font-weight: 600;
             border: 1px solid var(--k-border-soft);
             background: #FFFFFF;
             color: var(--k-text-secondary);
@@ -314,8 +227,8 @@
             font-family: inherit;
         }
         .region-btn:hover {
-            border-color: var(--k-primary);
-            color: var(--k-primary);
+            color: var(--k-text);
+            background: #F2F6F4;
         }
         .region-btn.active {
             background: var(--k-primary);
@@ -327,52 +240,45 @@
         .branch-list {
             flex: 1;
             overflow-y: auto;
-            padding: 14px 16px;
+            padding: 12px 16px;
         }
         .branch-card {
             background: #FFFFFF;
             border: 1px solid var(--k-border-soft);
-            border-radius: 16px;
+            border-radius: 14px;
             padding: 14px;
             margin-bottom: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
         .branch-card:hover {
             border-color: var(--k-primary);
-            background: #FAFDFB;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(9, 164, 110, 0.08);
         }
         .branch-card.active {
             border-color: var(--k-primary);
-            background: #F0FDF4;
-            box-shadow: 0 0 0 1.5px var(--k-primary);
+            background: #F8FBF9;
+            box-shadow: 0 0 0 1px var(--k-primary);
         }
         .branch-top {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
             gap: 8px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .branch-name {
             font-size: 13.5px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--k-text);
             line-height: 1.35;
         }
-        .badge {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 9999px;
+        .branch-type {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--k-primary);
             white-space: nowrap;
             flex-shrink: 0;
         }
-        .badge-kantor { background: #E8F7F1; color: #09A46E; border: 1px solid rgba(9,164,110,0.25); }
-        .badge-posko { background: #E0F2FE; color: #0284C7; border: 1px solid rgba(2,132,199,0.25); }
-        .badge-rumah_aman { background: #FEF3C7; color: #B45309; border: 1px solid rgba(180,83,9,0.25); }
         .branch-addr {
             font-size: 12px;
             color: var(--k-text-secondary);
@@ -384,45 +290,42 @@
             align-items: center;
             justify-content: space-between;
             padding-top: 8px;
-            border-top: 1px dashed var(--k-border-soft);
+            border-top: 1px solid #F0F3EF;
             font-size: 11.5px;
         }
-        .phone-link {
-            color: var(--k-primary-dark);
-            font-weight: 700;
-            text-decoration: none;
-        }
-        .phone-link:hover { text-decoration: underline; }
-        .route-link {
-            color: #2563EB;
-            font-weight: 700;
+        .footer-link {
+            color: var(--k-text-secondary);
+            font-weight: 600;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
+            transition: color 0.15s;
         }
-        .route-link:hover { text-decoration: underline; }
+        .footer-link:hover {
+            color: var(--k-primary);
+        }
 
-        /* ─── PIN-POINT ADD FORM VIEW (INSIDE LEFT PANEL) ─── */
+        /* Pin-Point Form View */
         .pinpoint-form-container {
             display: none;
             flex-direction: column;
             flex: 1;
             overflow-y: auto;
-            padding: 16px 18px;
+            padding: 18px 20px;
             background: #FFFFFF;
         }
         .pinpoint-form-container.active {
             display: flex;
         }
-        .pin-guide-banner {
-            background: #F0FDF4;
-            border: 1px solid rgba(9, 164, 110, 0.3);
-            border-radius: 14px;
-            padding: 12px 14px;
+        .pin-guide {
+            background: #F8FAF7;
+            border: 1px solid var(--k-border-soft);
+            border-radius: 10px;
+            padding: 10px 12px;
             margin-bottom: 14px;
             font-size: 12px;
-            color: #064E3B;
+            color: var(--k-text-secondary);
             line-height: 1.45;
         }
         .form-group {
@@ -430,121 +333,106 @@
         }
         .form-label {
             display: block;
-            font-size: 11.5px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 600;
             color: var(--k-text);
             margin-bottom: 5px;
         }
         .form-input, .form-select, .form-textarea {
             width: 100%;
-            padding: 9px 12px;
-            border-radius: 12px;
+            padding: 8px 11px;
+            border-radius: 10px;
             border: 1px solid var(--k-border);
             background: #FAFDFB;
             font-family: inherit;
             font-size: 12.5px;
             color: var(--k-text);
             outline: none;
-            transition: border-color 0.15s;
         }
         .form-input:focus, .form-select:focus, .form-textarea:focus {
             border-color: var(--k-primary);
             background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(9, 164, 110, 0.1);
         }
         .coord-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
         }
-        .coord-badge-input {
-            background: #E8F7F1 !important;
-            border-color: rgba(9, 164, 110, 0.35) !important;
-            color: #064E3B !important;
+        .coord-readonly {
+            background: #F2F6F4 !important;
             font-family: monospace;
-            font-weight: 700;
+            font-weight: 600;
+            color: #111827 !important;
         }
-        .btn-submit-pin {
+        .btn-submit {
             width: 100%;
-            padding: 11px 16px;
-            border-radius: 12px;
+            padding: 10px 16px;
+            border-radius: 10px;
             background: var(--k-primary);
             color: #FFFFFF;
-            font-weight: 800;
-            font-size: 13px;
+            font-weight: 600;
+            font-size: 12.5px;
             border: none;
             cursor: pointer;
             font-family: inherit;
-            box-shadow: 0 4px 14px rgba(9, 164, 110, 0.25);
-            transition: all 0.2s;
             margin-top: 4px;
         }
-        .btn-submit-pin:hover {
+        .btn-submit:hover {
             background: var(--k-primary-hover);
         }
-        .btn-open-filament {
+        .btn-secondary-link {
             width: 100%;
             padding: 9px 14px;
-            border-radius: 12px;
-            background: #F0F3EF;
-            color: var(--k-text);
-            font-weight: 700;
+            border-radius: 10px;
+            background: #F8FAF7;
+            color: var(--k-text-secondary);
+            font-weight: 600;
             font-size: 12px;
             border: 1px solid var(--k-border);
-            cursor: pointer;
-            font-family: inherit;
             text-align: center;
             text-decoration: none;
             display: block;
             margin-top: 8px;
         }
-        .btn-open-filament:hover {
-            background: #E4EDE8;
+        .btn-secondary-link:hover {
+            color: var(--k-text);
+            background: #F0F3EF;
         }
 
-        /* ─── RIGHT MAP BENTO CONTAINER ─── */
+        /* Map Container */
         .map-bento {
             flex: 1;
             background: #FFFFFF;
             border: 1px solid var(--k-border);
-            border-radius: 20px;
+            border-radius: 18px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 14px rgba(9, 164, 110, 0.04);
         }
         #map {
             width: 100%;
             height: 100%;
         }
 
-        /* Floating Map Overlay Bar (Top of Map) */
+        /* Map Search Bar */
         .map-floating-bar {
             position: absolute;
             top: 14px;
             left: 14px;
-            right: 14px;
             z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            pointer-events: none;
-            gap: 10px;
-        }
-        .map-floating-bar > * {
-            pointer-events: auto;
         }
         .geocode-search-bar {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             background: rgba(255, 255, 255, 0.96);
             backdrop-filter: blur(8px);
-            padding: 6px 8px 6px 14px;
-            border-radius: 9999px;
+            padding: 5px 6px 5px 12px;
+            border-radius: 12px;
             border: 1px solid var(--k-border);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-            width: 370px;
-            max-width: 100%;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+            width: 340px;
+            max-width: calc(100vw - 48px);
+            color: #6B7280;
         }
         .geocode-search-bar input {
             border: none;
@@ -559,59 +447,44 @@
             background: var(--k-primary);
             color: #FFFFFF;
             border: none;
-            border-radius: 9999px;
+            border-radius: 8px;
             padding: 6px 12px;
-            font-size: 11px;
-            font-weight: 700;
+            font-size: 11.5px;
+            font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
             font-family: inherit;
         }
 
-        .pinpoint-toast {
-            background: rgba(17, 24, 39, 0.92);
-            color: #FFFFFF;
-            padding: 8px 16px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-        }
-
-        /* Legend Box */
+        /* Legend */
         .legend-box {
             position: absolute;
             z-index: 1000;
             bottom: 20px;
-            left: 16px;
+            left: 14px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(6px);
-            padding: 12px 16px;
-            border-radius: 16px;
+            padding: 10px 14px;
+            border-radius: 12px;
             border: 1px solid var(--k-border);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             font-size: 11.5px;
-            line-height: 1.75;
+            line-height: 1.7;
         }
         .legend-title {
-            font-weight: 800;
+            font-weight: 700;
             margin-bottom: 4px;
             color: var(--k-text);
-            font-size: 12px;
         }
         .legend-item {
             display: flex;
             align-items: center;
             gap: 8px;
             color: var(--k-text-secondary);
-            font-weight: 500;
         }
         .legend-dot {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             display: inline-block;
         }
@@ -620,19 +493,18 @@
         .dot-rumah { background: #F59E0B; }
         .dot-pin { background: #EF4444; }
 
-        /* Flash Alert */
         .flash-banner {
             position: fixed;
             bottom: 24px;
             right: 24px;
             z-index: 2000;
-            background: #064E3B;
+            background: #111827;
             color: #FFFFFF;
-            padding: 12px 20px;
-            border-radius: 14px;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: 0 8px 24px rgba(6, 78, 59, 0.3);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -651,76 +523,55 @@
 
     @if(session('success'))
         <div class="flash-banner" id="flashBanner">
-            <span>✅ {{ session('success') }}</span>
-            <button onclick="document.getElementById('flashBanner').remove()" style="background:none;border:none;color:#A7F3D0;cursor:pointer;font-weight:800;">✕</button>
+            <span>{{ session('success') }}</span>
+            <button onclick="document.getElementById('flashBanner').remove()" style="background:none;border:none;color:#9CA3AF;cursor:pointer;">✕</button>
         </div>
-        <script>setTimeout(() => { const el = document.getElementById('flashBanner'); if (el) el.remove(); }, 5000);</script>
+        <script>setTimeout(() => { const el = document.getElementById('flashBanner'); if (el) el.remove(); }, 4000);</script>
     @endif
 
-    <!-- ─── TOP HEADER BAR (Desain Pengurus OpsiProyek1) ─── -->
+    <!-- Header -->
     <header class="top-header">
         <a href="/admin" class="brand-box">
             <img src="/images/logo.png" alt="Logo Koperasi" onerror="this.style.display='none'">
-            <div class="brand-text-wrap">
-                <span class="brand-pill">Portal Sekretaris & GIS</span>
-                <span class="brand-title">Koperasi Peduli Buruh Migran Indramayu</span>
-            </div>
+            <span class="brand-title">Koperasi Peduli Buruh Migran Indramayu</span>
         </a>
 
-        <!-- Center Pill Tabs -->
-        <nav class="pill-nav" aria-label="Menu Utama Sekretaris">
-            <a href="/admin" class="pill-tab">
-                <span>Dashboard</span>
-            </a>
-            <a href="/admin/members" class="pill-tab">
-                <span>Verifikasi & Anggota</span>
-                @if(($stats['pending_members'] ?? 0) > 0)
-                    <span class="pill-badge">{{ $stats['pending_members'] }}</span>
-                @endif
-            </a>
-            <a href="/admin/branches" class="pill-tab">
-                <span>Data Kantor & Posko</span>
-                <span class="pill-badge">{{ $stats['total_branches'] ?? count($branches) }}</span>
-            </a>
-            <a href="/peta" class="pill-tab active">
-                <span>🗺️ Peta GIS Interaktif</span>
-            </a>
+        <nav class="pill-nav" aria-label="Menu Utama">
+            <a href="/admin" class="pill-tab">Dashboard</a>
+            <a href="/admin/members" class="pill-tab">Manajemen Anggota</a>
+            <a href="/admin/branches" class="pill-tab">Data Kantor & Posko</a>
+            <a href="/peta" class="pill-tab active">Peta GIS</a>
         </nav>
 
-        <!-- Right Quick Actions -->
         <div class="header-actions">
-            <button type="button" class="btn-action" id="btn-near" title="Cari Kantor/Posko Terdekat (Haversine)">
-                <span>🎯</span>
-                <span>Posko Terdekat</span>
+            <button type="button" class="btn-action" id="btn-near">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+                <span id="near-btn-text">Lokasi Terdekat</span>
             </button>
             <button type="button" class="btn-action primary" id="btn-toggle-pinpoint" onclick="togglePinpointMode()">
-                <span id="pinpoint-btn-icon">📍</span>
-                <span id="pinpoint-btn-text">+ Tambah via Pin-Point</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                <span id="pinpoint-btn-text">Tambah Titik Lokasi</span>
             </button>
         </div>
     </header>
 
-    <!-- ─── MAIN WORKSPACE ─── -->
+    <!-- Workspace -->
     <div class="workspace">
 
-        <!-- LEFT BENTO PANEL -->
+        <!-- Left Panel -->
         <aside class="left-panel">
 
-            <!-- VIEW 1: DAFTAR KANTOR & POSKO -->
+            <!-- View 1: Daftar Lokasi -->
             <div id="listViewContainer" style="display:flex; flex-direction:column; height:100%;">
                 <div class="panel-header">
-                    <div class="panel-eyebrow">
-                        <div class="eyebrow-tag"><span></span> Direktori Spasial Migrant CARE</div>
-                        <span class="count-pill">{{ count($branches) }} Titik Aktif</span>
-                    </div>
                     <h2>Kantor & Posko Layanan</h2>
-                    <p>Klik salah satu kartu untuk memusatkan peta atau klik langsung titik mana saja di peta untuk menambah lokasi baru.</p>
+                    <p>Pilih lokasi untuk memusatkan peta atau klik pada peta untuk menambahkan titik baru.</p>
                 </div>
 
                 <div class="panel-controls">
                     <div class="search-box">
-                        <span>🔍</span>
-                        <input type="text" id="filterSearchInput" placeholder="Cari nama posko, desa, atau jalan..." oninput="filterCards()">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <input type="text" id="filterSearchInput" placeholder="Cari nama kantor, desa, atau jalan..." oninput="filterCards()">
                     </div>
                     <div class="region-pills">
                         <button class="region-btn active" onclick="filterWilayah('all', this)">Semua ({{ count($branches) }})</button>
@@ -734,15 +585,9 @@
                         @php
                             $isJkt = str_contains(strtolower($b->alamat . ' ' . $b->nama), 'jakarta');
                             $wilayahTag = $isJkt ? 'jakarta' : 'indramayu';
-                            $badgeClass = match($b->jenis) {
-                                'kantor' => 'badge-kantor',
-                                'posko' => 'badge-posko',
-                                'rumah_aman' => 'badge-rumah_aman',
-                                default => 'badge-posko',
-                            };
-                            $badgeLabel = match($b->jenis) {
+                            $typeLabel = match($b->jenis) {
                                 'kantor' => 'Kantor Operasional',
-                                'posko' => 'Posko Layanan PMI',
+                                'posko' => 'Posko Layanan',
                                 'rumah_aman' => 'Rumah Aman',
                                 default => ucfirst($b->jenis ?? 'Posko'),
                             };
@@ -754,26 +599,26 @@
                              id="branch-card-{{ $index }}">
                             <div class="branch-top">
                                 <div class="branch-name">{{ $b->nama }}</div>
-                                <span class="badge {{ $badgeClass }}">{{ $badgeLabel }}</span>
+                                <span class="branch-type">{{ $typeLabel }}</span>
                             </div>
                             <div class="branch-addr">{{ $b->alamat }}</div>
                             <div class="branch-footer">
                                 @if($b->telepon)
-                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $b->telepon) }}" class="phone-link" onclick="event.stopPropagation();">
-                                        📞 {{ $b->telepon }}
+                                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', $b->telepon) }}" class="footer-link" onclick="event.stopPropagation();">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                        <span>{{ $b->telepon }}</span>
                                     </a>
                                 @else
-                                    <span style="color:#9CA3AF;">Hotline Terpadu</span>
+                                    <span style="color:#9CA3AF;">-</span>
                                 @endif
-                                <div style="display:flex; gap:10px; align-items:center;">
-                                    <a href="/admin/branches/{{ $b->id }}/edit" class="route-link" style="color:#09A46E;" onclick="event.stopPropagation();">
-                                        ✏️ Edit
-                                    </a>
+                                <div style="display:flex; gap:12px; align-items:center;">
+                                    <a href="/admin/branches/{{ $b->id }}/edit" class="footer-link" onclick="event.stopPropagation();">Edit</a>
                                     <a href="https://www.google.com/maps/dir/?api=1&destination={{ $b->latitude }},{{ $b->longitude }}"
                                        target="_blank"
-                                       class="route-link"
+                                       class="footer-link"
                                        onclick="event.stopPropagation();">
-                                        🧭 Rute Maps
+                                        <span>Rute Maps</span>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
                                     </a>
                                 </div>
                             </div>
@@ -782,30 +627,27 @@
                 </div>
             </div>
 
-            <!-- VIEW 2: FORM TAMBAH PIN-POINT OTOMATIS -->
+            <!-- View 2: Form Tambah Titik Lokasi -->
             <div id="pinpointFormContainer" class="pinpoint-form-container">
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #F0F3EF;">
-                    <div>
-                        <div class="eyebrow-tag"><span></span> Mode Pin-Point Otomatis</div>
-                        <h3 style="margin:2px 0 0 0; font-size:16px; font-weight:800; color:#17211C;">Tambah Kantor / Posko Baru</h3>
-                    </div>
-                    <button type="button" onclick="togglePinpointMode(false)" style="background:#F0F3EF; border:none; border-radius:9999px; width:30px; height:30px; cursor:pointer; font-weight:800; color:#526158;">✕</button>
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; padding-bottom:10px; border-bottom:1px solid #F0F3EF;">
+                    <h3 style="margin:0; font-size:15px; font-weight:700; color:#17211C;">Tambah Lokasi Baru</h3>
+                    <button type="button" onclick="togglePinpointMode(false)" style="background:#F2F6F4; border:none; border-radius:8px; width:28px; height:28px; cursor:pointer; color:#526158;">✕</button>
                 </div>
 
-                <div class="pin-guide-banner" id="pinStatusBanner">
-                    💡 <strong>Klik di mana saja pada peta</strong> atau geser pin merah — koordinat <strong>Latitude, Longitude, dan Alamat</strong> di bawah akan terisi secara otomatis!
+                <div class="pin-guide" id="pinStatusBanner">
+                    Klik pada peta atau geser pin merah untuk mengisi koordinat dan alamat secara otomatis.
                 </div>
 
                 <form action="{{ route('peta.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label class="form-label">Nama Kantor / Posko Layanan *</label>
-                        <input type="text" name="nama" id="inputNama" class="form-input" placeholder="Contoh: Posko DESBUMI Desa Lombang" required>
+                        <label class="form-label">Nama Kantor / Posko</label>
+                        <input type="text" name="nama" id="inputNama" class="form-input" placeholder="Contoh: Posko Layanan Desa Lombang" required>
                     </div>
 
                     <div class="coord-grid">
                         <div class="form-group">
-                            <label class="form-label">Kategori Lokasi *</label>
+                            <label class="form-label">Kategori</label>
                             <select name="jenis" id="inputJenis" class="form-select" required>
                                 <option value="posko">Posko Layanan PMI</option>
                                 <option value="kantor">Kantor Operasional</option>
@@ -814,70 +656,60 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Hotline / Telepon PIC</label>
+                            <label class="form-label">Nomor Telepon</label>
                             <input type="text" name="telepon" id="inputTelepon" class="form-input" placeholder="+62 813-xxxx-xxxx">
                         </div>
                     </div>
 
                     <div class="coord-grid">
                         <div class="form-group">
-                            <label class="form-label">Latitude (Otomatis) *</label>
-                            <input type="number" step="any" name="latitude" id="inputLat" class="form-input coord-badge-input" required readonly>
+                            <label class="form-label">Latitude</label>
+                            <input type="number" step="any" name="latitude" id="inputLat" class="form-input coord-readonly" required readonly>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Longitude (Otomatis) *</label>
-                            <input type="number" step="any" name="longitude" id="inputLng" class="form-input coord-badge-input" required readonly>
+                            <label class="form-label">Longitude</label>
+                            <input type="number" step="any" name="longitude" id="inputLng" class="form-input coord-readonly" required readonly>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Alamat Lengkap (Otomatis dari Pin Peta) *</label>
-                        <textarea name="alamat" id="inputAlamat" rows="3" class="form-textarea" placeholder="Klik titik pada peta untuk mengisi alamat jalan/desa otomatis..." required></textarea>
+                        <label class="form-label">Alamat Lengkap</label>
+                        <textarea name="alamat" id="inputAlamat" rows="3" class="form-textarea" placeholder="Klik titik di peta untuk mengisi alamat otomatis..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn-submit-pin">
-                        💾 Simpan Titik Lokasi Sekarang
-                    </button>
+                    <button type="submit" class="btn-submit">Simpan Lokasi</button>
 
-                    <a href="/admin/branches/create" id="linkOpenFilament" class="btn-open-filament">
-                        ↗️ Buka & Lanjutkan di Form Filament Admin
+                    <a href="/admin/branches/create" id="linkOpenFilament" class="btn-secondary-link">
+                        Buka di Form Filament
                     </a>
                 </form>
             </div>
 
         </aside>
 
-        <!-- RIGHT MAP BENTO -->
+        <!-- Right Map Container -->
         <main class="map-bento">
             <div class="map-floating-bar">
-                <!-- Search Location Bar on Map -->
                 <div class="geocode-search-bar">
-                    <span>🔎</span>
-                    <input type="text" id="mapPlaceSearch" placeholder="Cari tempat/desa di peta (misal: Karangampel / Mampang)..." onkeydown="if(event.key==='Enter') searchPlaceOnMap()">
-                    <button type="button" onclick="searchPlaceOnMap()" id="btnSearchPlace">Cari Peta</button>
-                </div>
-
-                <!-- Hint Badge -->
-                <div class="pinpoint-toast" id="mapHintBadge">
-                    <span>💡 Tips: Klik titik mana saja di peta untuk Pin-Point lokasi baru otomatis</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="mapPlaceSearch" placeholder="Cari desa atau kecamatan di peta..." onkeydown="if(event.key==='Enter') searchPlaceOnMap()">
+                    <button type="button" onclick="searchPlaceOnMap()" id="btnSearchPlace">Cari</button>
                 </div>
             </div>
 
             <div id="map"></div>
 
-            <!-- Legend -->
             <div class="legend-box">
-                <div class="legend-title">🗺️ Indikator Titik Layanan</div>
-                <div class="legend-item"><span class="legend-dot dot-kantor"></span> Kantor Operasional / Pusat (Hijau)</div>
-                <div class="legend-item"><span class="legend-dot dot-posko"></span> Posko Layanan DESBUMI (Biru)</div>
-                <div class="legend-item"><span class="legend-dot dot-rumah"></span> Rumah Aman & Konseling (Oranye)</div>
-                <div class="legend-item"><span class="legend-dot dot-pin"></span> Pin-Point Baru / Lokasi Anda (Merah)</div>
+                <div class="legend-title">Keterangan Titik</div>
+                <div class="legend-item"><span class="legend-dot dot-kantor"></span> Kantor Operasional</div>
+                <div class="legend-item"><span class="legend-dot dot-posko"></span> Posko Layanan PMI</div>
+                <div class="legend-item"><span class="legend-dot dot-rumah"></span> Rumah Aman</div>
+                <div class="legend-item"><span class="legend-dot dot-pin"></span> Titik Pilihan / Lokasi Anda</div>
             </div>
         </main>
 
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const branches = @json($branches);
@@ -885,16 +717,14 @@
         let isPinpointMode = false;
         let pinMarker = null;
 
-        // Inisialisasi Peta
         const map = L.map('map', { zoomControl: false }).setView([-6.38, 107.60], 9);
         L.control.zoom({ position: 'bottomright' }).addTo(map);
 
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
-            attribution: '&copy; OpenStreetMap | GIS Koperasi Peduli Buruh Migran Indramayu'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
-        // Marker Icons
         const greenIcon = new L.Icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -916,32 +746,27 @@
             iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
         });
 
-        // Render Markers
         const markers = [];
         branches.forEach((b, i) => {
             let icon = blueIcon;
-            let badgeBg = '#E0F2FE', badgeColor = '#0284C7', badgeText = 'Posko Layanan PMI';
-
+            let typeText = 'Posko Layanan PMI';
             if (b.jenis === 'kantor') {
                 icon = greenIcon;
-                badgeBg = '#E8F7F1'; badgeColor = '#09A46E'; badgeText = 'Kantor Operasional';
+                typeText = 'Kantor Operasional';
             } else if (b.jenis === 'rumah_aman') {
                 icon = orangeIcon;
-                badgeBg = '#FEF3C7'; badgeColor = '#B45309'; badgeText = 'Rumah Aman';
+                typeText = 'Rumah Aman';
             }
 
             const m = L.marker([b.latitude, b.longitude], { icon }).addTo(map);
             m.bindPopup(`
-                <div style="min-width:220px; font-family:'Plus Jakarta Sans',sans-serif;">
-                    <span style="font-size:10px; background:${badgeBg}; color:${badgeColor}; padding:3px 8px; border-radius:9999px; font-weight:800;">${badgeText}</span>
-                    <h4 style="margin:8px 0 4px 0; font-size:14px; font-weight:800; color:#17211C;">${b.nama}</h4>
+                <div style="min-width:210px; font-family:'Plus Jakarta Sans',sans-serif;">
+                    <div style="font-size:11px; color:#09A46E; font-weight:700; margin-bottom:2px;">${typeText}</div>
+                    <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:#17211C;">${b.nama}</h4>
                     <p style="margin:0 0 8px 0; font-size:12px; color:#526158; line-height:1.45;">${b.alamat}</p>
-                    <div style="font-family:monospace; font-size:10.5px; color:#09A46E; background:#F0FDF4; padding:3px 7px; border-radius:6px; margin-bottom:8px;">
-                        📍 ${Number(b.latitude).toFixed(6)}, ${Number(b.longitude).toFixed(6)}
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #DCE3DE; padding-top:7px; font-size:11.5px;">
-                        ${b.telepon ? `<a href="tel:${b.telepon}" style="color:#09A46E; font-weight:700; text-decoration:none;">📞 ${b.telepon}</a>` : '<span></span>'}
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}" target="_blank" style="color:#2563EB; font-weight:700; text-decoration:none;">🧭 Rute Maps</a>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #F0F3EF; padding-top:7px; font-size:11.5px;">
+                        ${b.telepon ? `<a href="tel:${b.telepon}" style="color:#17211C; font-weight:600; text-decoration:none;">${b.telepon}</a>` : '<span></span>'}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination=${b.latitude},${b.longitude}" target="_blank" style="color:#09A46E; font-weight:700; text-decoration:none;">Buka Rute &rarr;</a>
                     </div>
                 </div>
             `);
@@ -961,24 +786,13 @@
         ], {
             color: '#09A46E',
             fillColor: '#10B981',
-            fillOpacity: 0.10,
-            weight: 2,
-            dashArray: '6, 6'
+            fillOpacity: 0.08,
+            weight: 1.5,
+            dashArray: '5, 5'
         }).addTo(map);
-        areaIndramayu.bindPopup('<b>Wilayah Dampingan Utama Komunitas PMI Indramayu</b><br>Kecamatan Juntinyuat, Karangampel, & Krangkeng.');
+        areaIndramayu.bindPopup('<b>Wilayah Layanan Indramayu</b><br>Kecamatan Juntinyuat, Karangampel, dan Krangkeng.');
 
-        // GeoJSON Zona Koordinasi Jakarta
-        L.geoJSON({
-            "type": "Feature",
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[106.81, -6.23], [106.87, -6.23], [106.87, -6.28], [106.81, -6.28], [106.81, -6.23]]]
-            }
-        }, {
-            style: { color: '#0284C7', weight: 1.5, fillOpacity: 0.08, dashArray: '4, 4' }
-        }).addTo(map).bindPopup('<b>Zona Koordinasi & Advokasi Nasional DKI Jakarta</b>');
-
-        // ─── FITUR UTAMA: KLIK PETA (PIN-POINT) OTOMATIS ISI LATITUDE, LONGITUDE & ALAMAT ───
+        // Klik Peta untuk Pin-Point
         map.on('click', function(e) {
             const { lat, lng } = e.latlng;
             activatePinpointAt(lat, lng);
@@ -996,7 +810,7 @@
                 formEl.classList.add('active');
                 btn.classList.remove('primary');
                 btn.classList.add('pin-active');
-                btnText.textContent = 'Mode Pin-Point Aktif (Klik Peta)';
+                btnText.textContent = 'Tutup Mode Titik';
 
                 if (!pinMarker) {
                     const center = map.getCenter();
@@ -1007,7 +821,7 @@
                 formEl.classList.remove('active');
                 btn.classList.remove('pin-active');
                 btn.classList.add('primary');
-                btnText.textContent = '+ Tambah via Pin-Point';
+                btnText.textContent = 'Tambah Titik Lokasi';
                 if (pinMarker) {
                     map.removeLayer(pinMarker);
                     pinMarker = null;
@@ -1036,37 +850,34 @@
                 pinMarker.setLatLng([lat, lng]);
             }
 
-            pinMarker.bindPopup(`<b>📍 Titik Baru Terpilih</b><br><span style="font-family:monospace;font-size:11px;">${fLat}, ${fLng}</span>`).openPopup();
+            pinMarker.bindPopup(`<b>Titik Lokasi Baru</b><br><span style="font-family:monospace;font-size:11px;">${fLat}, ${fLng}</span>`).openPopup();
 
             const banner = document.getElementById('pinStatusBanner');
-            banner.innerHTML = `⏳ <strong>Mendeteksi nama jalan/desa otomatis...</strong> (${fLat}, ${fLng})`;
+            banner.textContent = `Mengambil detail alamat untuk koordinat ${fLat}, ${fLng}...`;
 
-            // Update link ke Filament Create
             const filamentLink = document.getElementById('linkOpenFilament');
             filamentLink.href = `/admin/branches/create?lat=${fLat}&lng=${fLng}`;
 
-            // Reverse Geocoding Nominatim OpenStreetMap
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=id`);
                 const data = await res.json();
                 if (data && data.display_name) {
                     document.getElementById('inputAlamat').value = data.display_name;
                     filamentLink.href = `/admin/branches/create?lat=${fLat}&lng=${fLng}&alamat=${encodeURIComponent(data.display_name)}`;
-                    banner.innerHTML = `✅ <strong>Koordinat & Alamat Terkunci!</strong> Silakan isi nama posko lalu klik Simpan.`;
+                    banner.textContent = `Koordinat dan alamat berhasil terisi otomatis.`;
                 } else {
-                    banner.innerHTML = `✅ <strong>Koordinat Terkunci (${fLat}, ${fLng})</strong>. Silakan lengkapi alamat di bawah.`;
+                    banner.textContent = `Koordinat terkunci (${fLat}, ${fLng}). Silakan lengkapi alamat.`;
                 }
             } catch (err) {
-                banner.innerHTML = `✅ <strong>Koordinat Terkunci (${fLat}, ${fLng})</strong>. Silakan ketik alamat di bawah.`;
+                banner.textContent = `Koordinat terkunci (${fLat}, ${fLng}). Silakan ketik alamat di bawah.`;
             }
         }
 
-        // Cari lokasi di peta via Nominatim
         async function searchPlaceOnMap() {
             const q = document.getElementById('mapPlaceSearch').value.trim();
             if (!q) return;
             const btn = document.getElementById('btnSearchPlace');
-            btn.textContent = '⏳...';
+            btn.textContent = '...';
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(q)}&countrycodes=id&limit=1&accept-language=id`);
                 const items = await res.json();
@@ -1077,16 +888,15 @@
                     map.setView([lat, lng], 16, { animate: true });
                     activatePinpointAt(lat, lng);
                 } else {
-                    alert('Tempat tidak ditemukan. Coba gunakan kata kunci seperti "Karangampel Indramayu" atau "Pancoran Jakarta".');
+                    alert('Lokasi tidak ditemukan.');
                 }
             } catch (e) {
-                alert('Gagal melakukan pencarian lokasi.');
+                alert('Gagal mencari lokasi.');
             } finally {
-                btn.textContent = 'Cari Peta';
+                btn.textContent = 'Cari';
             }
         }
 
-        // Fokus ke cabang dari daftar kiri
         function focusBranch(index) {
             const b = branches[index];
             if (!b) return;
@@ -1101,7 +911,6 @@
             }
         }
 
-        // Filter Wilayah & Pencarian Kartu
         function filterWilayah(region, btnEl) {
             currentRegion = region;
             document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
@@ -1126,7 +935,6 @@
             });
         }
 
-        // Rumus Haversine (Posko Terdekat)
         function jarakKm(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const rad = d => d * Math.PI / 180;
@@ -1141,11 +949,11 @@
                 alert('Geolocation tidak didukung oleh browser Anda.');
                 return;
             }
-            const btn = document.getElementById('btn-near');
-            btn.innerHTML = '<span>⏳</span><span>Mendeteksi...</span>';
+            const btnText = document.getElementById('near-btn-text');
+            btnText.textContent = 'Mendeteksi...';
 
             navigator.geolocation.getCurrentPosition(pos => {
-                btn.innerHTML = '<span>🎯</span><span>Posko Terdekat</span>';
+                btnText.textContent = 'Lokasi Terdekat';
                 const { latitude, longitude } = pos.coords;
                 let best = null;
                 branches.forEach((b, i) => {
@@ -1155,29 +963,27 @@
 
                 if (userMarker) map.removeLayer(userMarker);
                 userMarker = L.circleMarker([latitude, longitude], {
-                    radius: 9, color: '#ffffff', weight: 2, fillColor: '#EF4444', fillOpacity: 0.95
-                }).addTo(map).bindPopup('<b>📍 Lokasi Anda Saat Ini</b>').openPopup();
+                    radius: 8, color: '#ffffff', weight: 2, fillColor: '#EF4444', fillOpacity: 0.95
+                }).addTo(map).bindPopup('<b>Lokasi Anda Saat Ini</b>').openPopup();
 
                 if (best !== null) {
                     const b = branches[best.i];
                     markers[best.i].bindPopup(`
-                        <div style="min-width:210px; font-family:'Plus Jakarta Sans',sans-serif;">
-                            <span style="font-size:10px; background:#09A46E; color:#fff; padding:3px 8px; border-radius:9999px; font-weight:800;">⭐ POSKO TERDEKAT</span>
-                            <h4 style="margin:7px 0 3px 0; font-size:14px; font-weight:800; color:#17211C;">${b.nama}</h4>
-                            <p style="margin:0 0 6px 0; font-size:12px; color:#526158;">${b.alamat}</p>
-                            <p style="margin:0; font-size:13px; font-weight:800; color:#09A46E;">Jarak: ${best.d.toFixed(2)} km</p>
+                        <div style="min-width:200px; font-family:'Plus Jakarta Sans',sans-serif;">
+                            <div style="font-size:11px; color:#09A46E; font-weight:700; margin-bottom:2px;">Lokasi Terdekat (${best.d.toFixed(2)} km)</div>
+                            <h4 style="margin:0 0 4px 0; font-size:14px; font-weight:700; color:#17211C;">${b.nama}</h4>
+                            <p style="margin:0; font-size:12px; color:#526158;">${b.alamat}</p>
                         </div>
                     `).openPopup();
                     map.fitBounds(L.latLngBounds([[latitude, longitude], [b.latitude, b.longitude]]).pad(0.3));
                     focusBranch(best.i);
                 }
             }, () => {
-                btn.innerHTML = '<span>🎯</span><span>Posko Terdekat</span>';
+                btnText.textContent = 'Lokasi Terdekat';
                 alert('Gagal mengakses GPS. Pastikan izin lokasi browser sudah diaktifkan.');
             });
         });
 
-        // Support URL Query (?lat=...&lng=...)
         const urlParams = new URLSearchParams(window.location.search);
         const qLat = parseFloat(urlParams.get('lat'));
         const qLng = parseFloat(urlParams.get('lng'));

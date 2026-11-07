@@ -33,13 +33,7 @@ class MembersTable
                     ->label('No. Telepon')
                     ->searchable(),
                 TextColumn::make('gender')
-                    ->label('L/P')
-                    ->badge()
-                    ->color(fn (string $state): string => match ($state) {
-                        'Laki-laki' => 'info',
-                        'Perempuan' => 'primary',
-                        default => 'gray',
-                    }),
+                    ->label('Jenis Kelamin'),
                 TextColumn::make('status')
                     ->label('Status Keanggotaan')
                     ->badge()

@@ -23,24 +23,13 @@ class MemberResource extends Resource
 
     protected static UnitEnum|string|null $navigationGroup = null;
 
-    protected static ?string $navigationLabel = 'Verifikasi & Buku Anggota';
+    protected static ?string $navigationLabel = 'Manajemen Anggota';
 
     protected static ?string $modelLabel = 'Anggota';
 
-    protected static ?string $pluralModelLabel = 'Verifikasi & Buku Anggota Koperasi';
+    protected static ?string $pluralModelLabel = 'Manajemen Anggota';
 
     protected static ?int $navigationSort = 1;
-
-    public static function getNavigationBadge(): ?string
-    {
-        $pending = static::getModel()::whereIn('status', ['PENDING_VERIFICATION', 'PAYMENT_PENDING'])->count();
-        return $pending > 0 ? (string) $pending : (string) static::getModel()::count();
-    }
-
-    public static function getNavigationBadgeColor(): ?string
-    {
-        return 'success';
-    }
 
     public static function form(Schema $schema): Schema
     {

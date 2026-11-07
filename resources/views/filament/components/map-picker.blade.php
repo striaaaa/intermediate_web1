@@ -5,13 +5,12 @@
         searchQuery: '',
         searching: false,
         reverseLoading: false,
-        statusText: 'Klik pada peta atau geser pin merah untuk memilih titik lokasi.',
+        statusText: 'Klik pada peta atau geser pin hijau untuk memilih titik lokasi.',
         currentLat: -6.4633000,
         currentLng: 108.4528000,
         autoFillAddress: true,
 
         initMap() {
-            // Load Leaflet CSS & JS dynamically if not yet loaded
             if (!document.getElementById('leaflet-css-filament')) {
                 const link = document.createElement('link');
                 link.id = 'leaflet-css-filament';
@@ -42,7 +41,6 @@
         setupMapInstance() {
             if (this.map) return;
 
-            // Cek apakah ada nilai awal dari form (Edit mode) atau dari URL parameter (?lat=...&lng=...)
             const urlParams = new URLSearchParams(window.location.search);
             const urlLat = parseFloat(urlParams.get('lat'));
             const urlLng = parseFloat(urlParams.get('lng'));
@@ -73,7 +71,7 @@
 
             L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
-                attribution: '&copy; OpenStreetMap | GIS Migrant CARE'
+                attribution: '&copy; OpenStreetMap'
             }).addTo(this.map);
 
             const pinIcon = new L.Icon({
@@ -90,21 +88,18 @@
                 icon: pinIcon
             }).addTo(this.map);
 
-            this.marker.bindPopup('<b>📍 Titik Lokasi Terpilih</b><br><span style=\'font-size:11px;\'>Geser pin atau klik peta untuk mengubah</span>').openPopup();
+            this.marker.bindPopup('<b>Titik Lokasi Terpilih</b><br><span style=\'font-size:11px;\'>Geser pin atau klik peta untuk mengubah</span>').openPopup();
 
-            // Event saat klik di mana saja pada peta
             this.map.on('click', (e) => {
                 const { lat, lng } = e.latlng;
                 this.updatePoint(lat, lng, true);
             });
 
-            // Event saat pin selesai digeser (dragend)
             this.marker.on('dragend', (e) => {
                 const pos = e.target.getLatLng();
                 this.updatePoint(pos.lat, pos.lng, true);
             });
 
-            // Pastikan ukuran peta direfresh
             setTimeout(() => {
                 this.map.invalidateSize();
             }, 250);
@@ -121,11 +116,10 @@
                 this.marker.setLatLng([this.currentLat, this.currentLng]);
             }
 
-            // Set nilai ke state Livewire Filament
             this.$wire.set('data.latitude', formattedLat);
             this.$wire.set('data.longitude', formattedLng);
 
-            this.statusText = `✓ Koordinat terkunci: ${formattedLat}, ${formattedLng}`;
+            this.statusText = `Koordinat dipilih: ${formattedLat}, ${formattedLng}`;
 
             if (doReverse && this.autoFillAddress) {
                 this.fetchReverseGeocode(this.currentLat, this.currentLng);
@@ -139,7 +133,7 @@
                 const data = await res.json();
                 if (data && data.display_name) {
                     this.$wire.set('data.alamat', data.display_name);
-                    this.statusText = `✓ Otomatis terisi: ${data.display_name.substring(0, 75)}...`;
+                    this.statusText = `Alamat terdeteksi: ${data.display_name.substring(0, 80)}...`;
                 }
             } catch (err) {
                 console.warn('Reverse geocoding gagal:', err);
@@ -164,12 +158,12 @@
                     if (this.autoFillAddress && place.display_name) {
                         this.$wire.set('data.alamat', place.display_name);
                     }
-                    this.statusText = `✓ Ditemukan: ${place.display_name.substring(0, 75)}...`;
+                    this.statusText = `Lokasi ditemukan: ${place.display_name.substring(0, 80)}...`;
                 } else {
-                    this.statusText = '⚠️ Lokasi tidak ditemukan. Coba kata kunci yang lebih umum (misal: Karangampel Indramayu).';
+                    this.statusText = 'Lokasi tidak ditemukan. Coba gunakan kata kunci yang lebih umum.';
                 }
             } catch (e) {
-                this.statusText = '⚠️ Gagal mencari lokasi.';
+                this.statusText = 'Gagal melakukan pencarian lokasi.';
             } finally {
                 this.searching = false;
             }
@@ -179,7 +173,7 @@
             if (!this.map) return;
             this.map.setView([lat, lng], zoom, { animate: true });
             this.updatePoint(lat, lng, true);
-            this.statusText = `📍 Berpindah ke ${label}`;
+            this.statusText = `Fokus wilayah: ${label}`;
         },
 
         detectMyLocation() {
@@ -187,7 +181,7 @@
                 alert('Browser tidak mendukung Geolocation.');
                 return;
             }
-            this.statusText = '⏳ Mendeteksi titik GPS perangkat Anda...';
+            this.statusText = 'Mendeteksi lokasi GPS...';
             navigator.geolocation.getCurrentPosition(
                 (pos) => {
                     const { latitude, longitude } = pos.coords;
@@ -195,99 +189,78 @@
                     this.updatePoint(latitude, longitude, true);
                 },
                 () => {
-                    this.statusText = '⚠️ Gagal mengakses GPS. Pastikan izin lokasi diaktifkan.';
+                    this.statusText = 'Gagal mengakses GPS.';
                 }
             );
         }
     }"
     x-init="initMap()"
     wire:ignore
-    style="background: #ffffff; border: 1px solid #DCE3DE; border-radius: 16px; padding: 18px; box-shadow: 0 2px 12px rgba(9, 164, 110, 0.04);"
+    style="display: flex; flex-direction: column; gap: 12px;"
 >
-    <!-- Header Pin-Point Picker ala Dashboard Pengurus OpsiProyek1 -->
-    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid #F0F3EF;">
-        <div>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <span style="width: 8px; height: 8px; border-radius: 9999px; background: #09A46E; display: inline-block;"></span>
-                <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: #09A46E;">
-                    Interactive GIS Pin-Point Picker
-                </span>
-            </div>
-            <h4 style="margin: 0; font-size: 15px; font-weight: 700; color: #17211C;">
-                Pilih Titik Lokasi Kantor / Posko di Peta
-            </h4>
-            <p style="margin: 2px 0 0 0; font-size: 12px; color: #526158;">
-                Klik langsung pada peta atau geser pin hijau — <strong>Latitude, Longitude, dan Alamat Lengkap</strong> akan terisi otomatis.
-            </p>
-        </div>
-
-        <!-- Toggle Auto-fill Alamat -->
-        <label style="display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 9999px; background: #E8F7F1; border: 1px solid rgba(9,164,110,0.25); font-size: 12px; font-weight: 600; color: #064E3B; cursor: pointer;">
-            <input type="checkbox" x-model="autoFillAddress" style="accent-color: #09A46E; width: 15px; height: 15px; cursor: pointer;">
-            <span>Isi Alamat Otomatis (Reverse Geocode)</span>
-        </label>
-    </div>
-
     <!-- Search Bar & Quick Region Buttons -->
-    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between;">
         <div style="flex: 1; min-width: 240px; display: flex; gap: 6px;">
             <input
                 type="text"
                 x-model="searchQuery"
                 @keydown.enter.prevent="searchLocation()"
-                placeholder="Ketik nama desa, jalan, atau kecamatan (contoh: Juntinyuat Indramayu / Mampang Jakarta)..."
-                style="flex: 1; padding: 8px 14px; border-radius: 12px; border: 1px solid #DCE3DE; background: #FAFDFB; font-size: 13px; color: #17211C; outline: none;"
+                placeholder="Cari desa, jalan, atau kecamatan (contoh: Juntinyuat Indramayu)..."
+                style="flex: 1; padding: 8px 12px; border-radius: 10px; border: 1px solid #DCE3DE; background: #FAFDFB; font-size: 13px; color: #17211C; outline: none;"
             />
             <button
                 type="button"
                 @click="searchLocation()"
-                style="padding: 8px 16px; border-radius: 12px; background: #09A46E; color: #ffffff; font-size: 12px; font-weight: 700; border: none; cursor: pointer; white-space: nowrap; transition: background 0.2s;"
+                style="padding: 8px 14px; border-radius: 10px; background: #09A46E; color: #ffffff; font-size: 12px; font-weight: 600; border: none; cursor: pointer; white-space: nowrap;"
             >
-                <span x-show="!searching">🔍 Cari Titik</span>
-                <span x-show="searching">⏳ Mencari...</span>
+                <span x-show="!searching">Cari Lokasi</span>
+                <span x-show="searching">Mencari...</span>
             </button>
         </div>
 
-        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; align-items: center;">
             <button
                 type="button"
-                @click="flyToPreset(-6.4633000, 108.4528000, 13, 'Pusat Indramayu (Karangampel)')"
-                style="padding: 7px 12px; border-radius: 9999px; background: #F0F3EF; color: #17211C; font-size: 11px; font-weight: 700; border: 1px solid #DCE3DE; cursor: pointer;"
+                @click="flyToPreset(-6.4633000, 108.4528000, 13, 'Indramayu')"
+                style="padding: 7px 12px; border-radius: 8px; background: #F2F6F4; color: #17211C; font-size: 12px; font-weight: 600; border: 1px solid #DCE3DE; cursor: pointer;"
             >
-                📍 Indramayu
+                Indramayu
             </button>
             <button
                 type="button"
-                @click="flyToPreset(-6.2514000, 106.8315000, 14, 'Sekretariat Jakarta (Mampang)')"
-                style="padding: 7px 12px; border-radius: 9999px; background: #F0F3EF; color: #17211C; font-size: 11px; font-weight: 700; border: 1px solid #DCE3DE; cursor: pointer;"
+                @click="flyToPreset(-6.2514000, 106.8315000, 14, 'DKI Jakarta')"
+                style="padding: 7px 12px; border-radius: 8px; background: #F2F6F4; color: #17211C; font-size: 12px; font-weight: 600; border: 1px solid #DCE3DE; cursor: pointer;"
             >
-                📍 DKI Jakarta
+                DKI Jakarta
             </button>
             <button
                 type="button"
                 @click="detectMyLocation()"
-                style="padding: 7px 12px; border-radius: 9999px; background: #E8F7F1; color: #09A46E; font-size: 11px; font-weight: 700; border: 1px solid rgba(9,164,110,0.3); cursor: pointer;"
+                style="padding: 7px 12px; border-radius: 8px; background: #FFFFFF; color: #09A46E; font-size: 12px; font-weight: 600; border: 1px solid #DCE3DE; cursor: pointer;"
             >
-                🎯 GPS Saya
+                Lokasi Saya
             </button>
+            <label style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: #526158; margin-left: 4px; cursor: pointer;">
+                <input type="checkbox" x-model="autoFillAddress" style="accent-color: #09A46E; cursor: pointer;">
+                <span>Isi alamat otomatis</span>
+            </label>
         </div>
     </div>
 
     <!-- Map Canvas -->
     <div
         x-ref="mapContainer"
-        style="width: 100%; height: 360px; border-radius: 14px; border: 1px solid #DCE3DE; overflow: hidden; z-index: 1;"
+        style="width: 100%; height: 350px; border-radius: 12px; border: 1px solid #DCE3DE; overflow: hidden; z-index: 1;"
     ></div>
 
-    <!-- Live Status Bar -->
-    <div style="margin-top: 10px; padding: 10px 14px; border-radius: 12px; background: #F7F8F5; border: 1px solid #E4EDE8; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px;">
-        <div style="display: flex; align-items: center; gap: 8px; color: #17211C; font-weight: 600;">
-            <span x-show="reverseLoading" style="color: #C78A18;">⏳ Mengambil nama jalan/desa otomatis...</span>
+    <!-- Status Bar -->
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: #526158;">
+        <div>
+            <span x-show="reverseLoading">Mengambil detail alamat...</span>
             <span x-show="!reverseLoading" x-text="statusText"></span>
         </div>
-        <div style="font-family: monospace; font-size: 11px; background: #E8F7F1; color: #09A46E; padding: 3px 10px; border-radius: 9999px; font-weight: 700;">
-            LAT: <span x-text="Number(currentLat).toFixed(6)"></span> | LNG: <span x-text="Number(currentLng).toFixed(6)"></span>
+        <div style="font-family: monospace; font-size: 11.5px; color: #17211C; font-weight: 600;">
+            <span x-text="Number(currentLat).toFixed(6)"></span>, <span x-text="Number(currentLng).toFixed(6)"></span>
         </div>
     </div>
 </div>
-

@@ -16,29 +16,28 @@ class BranchForm
     {
         return $schema
             ->components([
-                Section::make('Pin-Point Lokasi pada Peta (Otomatis Isi Koordinat & Alamat)')
-                    ->description('Klik titik lokasi pada peta di bawah atau cari nama desa/jalan. Latitude, Longitude, dan Alamat Lengkap akan terisi secara otomatis.')
+                Section::make('Titik Koordinat Peta')
+                    ->description('Klik lokasi pada peta atau cari nama desa/jalan untuk mengisi koordinat dan alamat secara otomatis.')
                     ->schema([
                         View::make('filament.components.map-picker')
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull(),
 
-                Section::make('Identitas Kantor / Posko Layanan Migrant CARE')
-                    ->description('Detail informasi titik layanan buruh migran (Indramayu / DKI Jakarta) beserta koordinat yang terkunci dari peta.')
+                Section::make('Informasi Kantor / Posko')
                     ->schema([
                         Grid::make(2)->schema([
                             TextInput::make('nama')
-                                ->label('Nama Kantor / Posko Layanan')
+                                ->label('Nama Kantor / Posko')
                                 ->placeholder('Contoh: Posko Layanan PMI Desa Juntinyuat')
                                 ->required()
                                 ->maxLength(255),
                             Select::make('jenis')
-                                ->label('Kategori Entitas / Posko')
+                                ->label('Kategori Lokasi')
                                 ->options([
                                     'kantor' => 'Kantor Operasional / Sekretariat',
-                                    'posko' => 'Posko Layanan & Aduan PMI (DESBUMI)',
-                                    'rumah_aman' => 'Rumah Aman & Konseling PMI',
+                                    'posko' => 'Posko Layanan & Aduan PMI',
+                                    'rumah_aman' => 'Rumah Aman & Konseling',
                                     'mitra' => 'Mitra Komunitas / Balai Desa',
                                 ])
                                 ->default('posko')
@@ -47,29 +46,27 @@ class BranchForm
 
                         Grid::make(3)->schema([
                             TextInput::make('telepon')
-                                ->label('Hotline / Kontak PIC')
+                                ->label('Nomor Telepon')
                                 ->placeholder('+62 813-2385-0043')
                                 ->tel()
                                 ->maxLength(50),
                             TextInput::make('latitude')
-                                ->label('Latitude (Otomatis dari Pin Peta)')
+                                ->label('Latitude')
                                 ->required()
                                 ->numeric()
                                 ->minValue(-90)
-                                ->maxValue(90)
-                                ->helperText('Terisi otomatis saat klik peta'),
+                                ->maxValue(90),
                             TextInput::make('longitude')
-                                ->label('Longitude (Otomatis dari Pin Peta)')
+                                ->label('Longitude')
                                 ->required()
                                 ->numeric()
                                 ->minValue(-180)
-                                ->maxValue(180)
-                                ->helperText('Terisi otomatis saat klik peta'),
+                                ->maxValue(180),
                         ]),
 
                         Textarea::make('alamat')
-                            ->label('Alamat Lengkap Wilayah (Otomatis / Dapat Diedit)')
-                            ->placeholder('Alamat otomatis terisi dari klik peta, atau sesuaikan detail RT/RW...')
+                            ->label('Alamat Lengkap')
+                            ->placeholder('Alamat otomatis terisi saat memilih titik di peta, atau ketik manual...')
                             ->rows(3)
                             ->required()
                             ->columnSpanFull(),
